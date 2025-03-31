@@ -168,3 +168,29 @@ function saveState() {
 function updateCursor() {
     canvas.className = `cursor-${currentTool}${selectedShape ? '-' + selectedShape : ''}`;
 }
+
+// Action Buttons
+const undoBtn = document.getElementById('undo-btn');
+const redoBtn = document.getElementById('redo-btn');
+const clearBtn = document.getElementById('clear-btn');
+
+undoBtn.addEventListener('click', () => {
+    if (canvasHistory.length > 1) {
+        redoHistory.push(canvasHistory.pop());
+        const previous = canvasHistory[canvasHistory.length - 1];
+        ctx.putImageData(previous, 0, 0);
+    }
+});
+
+redoBtn.addEventListener('click', () => {
+    if (redoHistory.length > 0) {
+        const restored = redoHistory.pop();
+        canvasHistory.push(restored);
+        ctx.putImageData(restored, 0, 0);
+    }
+});
+
+clearBtn.addEventListener('click', () => {
+    saveState();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+});
