@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Canvas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Web Canvas</h1>
+        
+        <div class="canvas-container">
+            <canvas id="drawing-canvas"></canvas>
+        </div>
+        
+        <div class="toolbar">
+            <div class="tool-section">
+                <h3>Drawing Tools</h3>
+                <button id="brush-tool" class="tool-btn active">Brush</button>
+                <button id="eraser-tool" class="tool-btn">Eraser</button>
+                <div class="brush-size-container">
+                    <label for="brush-size">Brush Size:</label>
+                    <input type="range" id="brush-size" min="1" max="50" value="5">
+                    <span id="size-value">5</span>
+                </div>
+            </div>
+            
+            <div class="tool-section">
+                <h3>Colors</h3>
+                <div class="color-palette">
+                    <div class="color-option" style="background-color: black;" data-color="black"></div>
+                    <div class="color-option" style="background-color: red;" data-color="red"></div>
+                    <div class="color-option" style="background-color: blue;" data-color="blue"></div>
+                    <div class="color-option" style="background-color: green;" data-color="green"></div>
+                    <div class="color-option" style="background-color: yellow;" data-color="yellow"></div>
+                    <div class="color-option" style="background-color: purple;" data-color="purple"></div>
+                    <div class="color-option" style="background-color: orange;" data-color="orange"></div>
+                    <div class="color-option" style="background-color: pink;" data-color="pink"></div>
+                </div>
+                <div class="current-color-display">
+                    <span>Selected Color:</span>
+                    <div id="current-color"></div>
+                </div>
+            </div>
+            
+            <div class="tool-section">
+                <h3>Text Tool</h3>
+                <button id="text-tool" class="tool-btn">Text</button>
+                <div class="text-options">
+                    <select id="font-family">
+                        <option value="Arial">Arial</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Courier New">Courier New</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Verdana">Verdana</option>
+                    </select>
+                    <select id="font-size">
+                        <option value="12">12px</option>
+                        <option value="16">16px</option>
+                        <option value="20">20px</option>
+                        <option value="24">24px</option>
+                        <option value="32">32px</option>
+                        <option value="48">48px</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="tool-section">
+                <h3>Shapes</h3>
+                <button id="circle-tool" class="tool-btn">Circle</button>
+                <button id="rectangle-tool" class="tool-btn">Rectangle</button>
+                <button id="triangle-tool" class="tool-btn">Triangle</button>
+            </div>
+            
+            <div class="tool-section">
+                <h3>Actions</h3>
+                <button id="undo-btn">Undo</button>
+                <button id="redo-btn">Redo</button>
+                <button id="clear-btn">Clear Canvas</button>
+            </div>
+            
+            <div class="tool-section">
+                <h3>Image</h3>
+                <input type="file" id="image-upload" accept="image/*">
+                <button id="download-btn">Download Canvas</button>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

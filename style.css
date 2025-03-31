@@ -1,0 +1,193 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.canvas-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+#drawing-canvas {
+    border: 2px solid #333;
+    background-color: white;
+    cursor: crosshair;
+}
+
+.toolbar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.tool-section {
+    background-color: #f5f5f5;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.tool-section h3 {
+    margin-bottom: 10px;
+    color: #444;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.tool-btn {
+    background-color: #e0e0e0;
+    border: none;
+    padding: 8px 12px;
+    margin: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.tool-btn:hover {
+    background-color: #d0d0d0;
+}
+
+.tool-btn.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.brush-size-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.brush-size-container label {
+    margin-right: 10px;
+}
+
+#brush-size {
+    flex: 1;
+}
+
+#size-value {
+    width: 30px;
+    text-align: right;
+}
+
+.color-palette {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.color-option {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #ddd;
+    transition: transform 0.2s;
+}
+
+.color-option:hover {
+    transform: scale(1.1);
+}
+
+.color-option.selected {
+    border: 2px solid #333;
+}
+
+.current-color-display {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+#current-color {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: black;
+    margin-left: 10px;
+    border: 1px solid #333;
+}
+
+.text-options {
+    display: flex;
+    margin-top: 10px;
+    gap: 10px;
+}
+
+select {
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+#undo-btn, #redo-btn, #clear-btn, #download-btn {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#undo-btn:hover, #redo-btn:hover, #clear-btn:hover, #download-btn:hover {
+    background-color: #0056b3;
+}
+
+#image-upload {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+/* Cursor styles */
+.cursor-brush {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="5" cy="5" r="5" fill="black"/></svg>') 5 5, auto;
+}
+
+.cursor-eraser {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><rect x="0" y="0" width="10" height="10" fill="gray"/></svg>') 5 5, auto;
+}
+
+.cursor-text {
+    cursor: text;
+}
+
+.cursor-circle {
+    cursor: crosshair;
+}
+
+.cursor-rectangle {
+    cursor: crosshair;
+}
+
+.cursor-triangle {
+    cursor: crosshair;
+}
