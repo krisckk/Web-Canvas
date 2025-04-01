@@ -15,12 +15,8 @@ let currentFont = 'Arial';
 let currentFontSize = '16';
 let canvasHistory = [];
 let redoHistory = [];
-let textInput = null;
-let isTextMode = false;
-let selectedShape = null;
+let brushShape = 'circle';
 let startX, startY;
-let isShapeDrawing = false;
-let currentCanvasState = null;
 
 // Save initial canvas state
 saveState();
@@ -34,26 +30,19 @@ toolButtons.forEach(btn => {
 
         if (this.id === 'brush-tool') {
             currentTool = 'brush';
-            updateCursor();
         } else if (this.id === 'eraser-tool') {
             currentTool = 'eraser';
-            updateCursor();
         } else if (this.id === 'text-tool') {
             currentTool = 'text';
-            updateCursor();
         } else if (this.id === 'circle-tool') {
-            currentTool = 'shape';
-            selectedShape = 'circle';
-            updateCursor();
+            brushShape = 'circle';
         } else if (this.id === 'rectangle-tool') {
-            currentTool = 'shape';
-            selectedShape = 'rectangle';
-            updateCursor();
+            brushShape = 'square';
         } else if (this.id === 'triangle-tool') {
-            currentTool = 'shape';
-            selectedShape = 'triangle';
-            updateCursor();
+            brushShape = 'triangle';
         }
+
+        updateCursor();
     });
 });
 
@@ -62,6 +51,7 @@ const sizeValue = document.getElementById('size-value');
 brushSizeSlider.addEventListener('input', function() {
     brushSize = this.value;
     sizeValue.textContent = brushSize;
+    updateCursor(); // update cursor when size changes
 });
 
 const colorOptions = document.querySelectorAll('.color-option');
@@ -87,77 +77,74 @@ canvas.addEventListener('mousedown', (e) => {
     startX = e.clientX - rect.left;
     startY = e.clientY - rect.top;
 
-    if (currentTool === 'shape') {
-        isShapeDrawing = true;
-        currentCanvasState = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    } else {
-        if (currentTool === 'brush' || currentTool === 'eraser') {
-            lastX = startX;
-            lastY = startY;
-        }
+    if (currentTool === 'brush' || currentTool === 'eraser') {
+        lastX = startX;
+        lastY = startY;
         isDrawing = true;
         draw(e);
     }
 });
 
 canvas.addEventListener('mousemove', (e) => {
-    if (isDrawing) draw(e);
-    if (isShapeDrawing) {
+    if (isDrawing) {
         const rect = canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-        ctx.putImageData(currentCanvasState, 0, 0);
-        ctx.fillStyle = currentColor;
 
-        if (selectedShape === 'rectangle') {
-            ctx.fillRect(startX, startY, x - startX, y - startY);
-        } else if (selectedShape === 'circle') {
-            const radiusX = (x - startX);
-            const radiusY = (y - startY);
-            ctx.beginPath();
-            ctx.ellipse(startX, startY, Math.abs(radiusX), Math.abs(radiusY), 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.closePath();
-        } else if (selectedShape === 'triangle') {
-            ctx.beginPath();
-            ctx.moveTo(startX, startY);
-            ctx.lineTo(x, y);
-            ctx.lineTo(startX, y);
-            ctx.closePath();
-            ctx.fill();
+        const dx = x - lastX;
+        const dy = y - lastY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const steps = Math.ceil(distance / (brushSize / 2));
+
+        for (let i = 0; i < steps; i++) {
+            const lerpX = lastX + (dx * i) / steps;
+            const lerpY = lastY + (dy * i) / steps;
+            drawPoint(lerpX, lerpY);
         }
+
+        lastX = x;
+        lastY = y;
     }
 });
 
 canvas.addEventListener('mouseup', () => {
-    if (isDrawing || isShapeDrawing) {
+    if (isDrawing) {
         saveState();
     }
     isDrawing = false;
-    isShapeDrawing = false;
 });
 
 function draw(e) {
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
+    drawPoint(x, y);
+    lastX = x;
+    lastY = y;
+}
 
-    ctx.lineWidth = brushSize;
-    ctx.lineCap = 'round';
+function drawPoint(x, y) {
+    ctx.fillStyle = currentTool === 'eraser' ? '#fff' : currentColor;
 
     if (currentTool === 'brush') {
-        ctx.strokeStyle = currentColor;
-        ctx.beginPath();
-        ctx.moveTo(lastX, lastY);
-        ctx.lineTo(x, y);
-        ctx.stroke();
-        ctx.closePath();
+        if (brushShape === 'circle') {
+            ctx.beginPath();
+            ctx.arc(x, y, brushSize / 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.closePath();
+        } else if (brushShape === 'square') {
+            ctx.fillRect(x - brushSize / 2, y - brushSize / 2, brushSize, brushSize);
+        } else if (brushShape === 'triangle') {
+            ctx.beginPath();
+            ctx.moveTo(x, y - brushSize / 2);
+            ctx.lineTo(x + brushSize / 2, y + brushSize / 2);
+            ctx.lineTo(x - brushSize / 2, y + brushSize / 2);
+            ctx.closePath();
+            ctx.fill();
+        }
     } else if (currentTool === 'eraser') {
         ctx.clearRect(x - brushSize / 2, y - brushSize / 2, brushSize, brushSize);
     }
-
-    lastX = x;
-    lastY = y;
 }
 
 function saveState() {
@@ -166,7 +153,29 @@ function saveState() {
 }
 
 function updateCursor() {
-    canvas.className = `cursor-${currentTool}${selectedShape ? '-' + selectedShape : ''}`;
+    const size = brushSize;
+    let cursorSVG = '';
+
+    if (currentTool === 'brush') {
+        if (brushShape === 'circle') {
+            cursorSVG = `<svg xmlns='http://www.w3.org/2000/svg' width='${size}' height='${size}'><circle cx='${size / 2}' cy='${size / 2}' r='${size / 2}' fill='black'/></svg>`;
+        } else if (brushShape === 'square') {
+            cursorSVG = `<svg xmlns='http://www.w3.org/2000/svg' width='${size}' height='${size}'><rect width='${size}' height='${size}' fill='black'/></svg>`;
+        } else if (brushShape === 'triangle') {
+            const h = size;
+            const w = size;
+            cursorSVG = `<svg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${h}'><polygon points='${w / 2},0 ${w},${h} 0,${h}' fill='black'/></svg>`;
+        }
+    } else if (currentTool === 'eraser') {
+        cursorSVG = `<svg xmlns='http://www.w3.org/2000/svg' width='${size}' height='${size}'><rect width='${size}' height='${size}' fill='gray'/></svg>`;
+    }
+
+    if (cursorSVG) {
+        const dataUrl = `url("data:image/svg+xml;utf8,${encodeURIComponent(cursorSVG)}") ${size / 2} ${size / 2}, auto`;
+        canvas.style.cursor = dataUrl;
+    } else {
+        canvas.style.cursor = 'default';
+    }
 }
 
 // Action Buttons
