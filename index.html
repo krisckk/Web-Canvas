@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Canvas</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css" crossorigin="anonymous"/>
+    <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr" defer></script>
 </head>
 <body>
     <div class="container">
@@ -28,22 +30,17 @@
             
             <div class="tool-section">
                 <h3>Colors</h3>
-                <div class="color-palette">
-                    <div class="color-option" style="background-color: black;" data-color="black"></div>
-                    <div class="color-option" style="background-color: red;" data-color="red"></div>
-                    <div class="color-option" style="background-color: blue;" data-color="blue"></div>
-                    <div class="color-option" style="background-color: green;" data-color="green"></div>
-                    <div class="color-option" style="background-color: yellow;" data-color="yellow"></div>
-                    <div class="color-option" style="background-color: purple;" data-color="purple"></div>
-                    <div class="color-option" style="background-color: orange;" data-color="orange"></div>
-                    <div class="color-option" style="background-color: pink;" data-color="pink"></div>
-                </div>
+                <div id="color-picker"></div>
                 <div class="current-color-display">
                     <span>Selected Color:</span>
                     <div id="current-color"></div>
                 </div>
+                <div class="color-palette-controls">
+                    <button id="save-palette-btn">Save Palette</button>
+                    <button id="load-palette-btn">Load Palette</button>
+                    <div id="saved-palette" class="color-palette"></div>
+                </div>
             </div>
-            
             <div class="tool-section">
                 <h3>Text Tool</h3>
                 <button id="text-tool" class="tool-btn">Text</button>
@@ -67,7 +64,7 @@
             </div>
             
             <div class="tool-section">
-                <h3>Shapes</h3>
+                <h3> Brush Shapes</h3>
                 <button id="circle-tool" class="tool-btn">Circle</button>
                 <button id="rectangle-tool" class="tool-btn">Rectangle</button>
                 <button id="triangle-tool" class="tool-btn">Triangle</button>
@@ -76,7 +73,7 @@
             <div class="tool-section">
                 <h3>Actions</h3>
                 <button id="undo-btn">Undo</button>
-                <button id="redo-btn">Redo</button>
+                
                 <button id="clear-btn">Clear Canvas</button>
             </div>
             
@@ -85,8 +82,9 @@
                 <input type="file" id="image-upload" accept="image/*">
                 <button id="download-btn">Download Canvas</button>
             </div>
+            
         </div>
     </div>
-    <script src="app.js"></script>
+    <script src="app.js" defer></script>
 </body>
 </html>
